@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo 1 - Dashboard Interactivo | CCruces</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="mb-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-4xl font-bold text-white mb-2">Dashboard Interactivo</h1>
+                    <p class="text-purple-200">Visualización de datos en tiempo real</p>
+                </div>
+                <a href="/" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition">
+                    ← Volver al sitio
+                </a>
+            </div>
+        </header>
+
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-purple-200 text-sm font-medium">Usuarios Activos</h3>
+                    <svg class="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                </div>
+                <p class="text-3xl font-bold text-white" id="activeUsers">1,234</p>
+                <p class="text-green-400 text-sm mt-2">+12% vs último mes</p>
+            </div>
+
+            <div class="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-purple-200 text-sm font-medium">Ingresos</h3>
+                    <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <p class="text-3xl font-bold text-white" id="revenue">$45,678</p>
+                <p class="text-blue-400 text-sm mt-2">+8% vs último mes</p>
+            </div>
+
+            <div class="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-purple-200 text-sm font-medium">Proyectos</h3>
+                    <svg class="w-8 h-8 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                </div>
+                <p class="text-3xl font-bold text-white" id="projects">42</p>
+                <p class="text-yellow-400 text-sm mt-2">5 activos</p>
+            </div>
+
+            <div class="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-purple-200 text-sm font-medium">Satisfacción</h3>
+                    <svg class="w-8 h-8 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <p class="text-3xl font-bold text-white" id="satisfaction">98%</p>
+                <p class="text-pink-400 text-sm mt-2">Excelente</p>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <!-- Line Chart -->
+            <div class="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20">
+                <h3 class="text-xl font-semibold text-white mb-4">Tendencia de Usuarios (7 días)</h3>
+                <canvas id="lineChart"></canvas>
+            </div>
+
+            <!-- Bar Chart -->
+            <div class="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20">
+                <h3 class="text-xl font-semibold text-white mb-4">Proyectos por Categoría</h3>
+                <canvas id="barChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Doughnut Chart -->
+        <div class="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20">
+            <h3 class="text-xl font-semibold text-white mb-4">Distribución de Tecnologías</h3>
+            <div class="max-w-md mx-auto">
+                <canvas id="doughnutChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simulate real-time data updates
+        function updateStats() {
+            const activeUsers = document.getElementById('activeUsers');
+            const currentValue = parseInt(activeUsers.textContent.replace(',', ''));
+            const newValue = currentValue + Math.floor(Math.random() * 10) - 5;
+            activeUsers.textContent = newValue.toLocaleString();
+        }
+
+        setInterval(updateStats, 3000);
+
+        // Line Chart
+        const lineCtx = document.getElementById('lineChart').getContext('2d');
+        new Chart(lineCtx, {
+            type: 'line',
+            data: {
+                labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
+                datasets: [{
+                    label: 'Usuarios',
+                    data: [1200, 1150, 1300, 1250, 1400, 1350, 1234],
+                    borderColor: 'rgb(147, 51, 234)',
+                    backgroundColor: 'rgba(147, 51, 234, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        labels: { color: '#fff' }
+                    }
+                },
+                scales: {
+                    y: {
+                        ticks: { color: '#fff' },
+                        grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                    },
+                    x: {
+                        ticks: { color: '#fff' },
+                        grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                    }
+                }
+            }
+        });
+
+        // Bar Chart
+        const barCtx = document.getElementById('barChart').getContext('2d');
+        new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Web', 'Mobile', 'Backend', 'DevOps', 'UI/UX'],
+                datasets: [{
+                    label: 'Proyectos',
+                    data: [12, 8, 10, 6, 6],
+                    backgroundColor: [
+                        'rgba(59, 130, 246, 0.8)',
+                        'rgba(16, 185, 129, 0.8)',
+                        'rgba(245, 158, 11, 0.8)',
+                        'rgba(239, 68, 68, 0.8)',
+                        'rgba(236, 72, 153, 0.8)'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        labels: { color: '#fff' }
+                    }
+                },
+                scales: {
+                    y: {
+                        ticks: { color: '#fff' },
+                        grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                    },
+                    x: {
+                        ticks: { color: '#fff' },
+                        grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                    }
+                }
+            }
+        });
+
+        // Doughnut Chart
+        const doughnutCtx = document.getElementById('doughnutChart').getContext('2d');
+        new Chart(doughnutCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['React/Next.js', 'TypeScript', 'Python', 'Flutter', 'PostgreSQL', 'Docker'],
+                datasets: [{
+                    data: [30, 25, 15, 12, 10, 8],
+                    backgroundColor: [
+                        'rgba(59, 130, 246, 0.8)',
+                        'rgba(147, 51, 234, 0.8)',
+                        'rgba(16, 185, 129, 0.8)',
+                        'rgba(245, 158, 11, 0.8)',
+                        'rgba(239, 68, 68, 0.8)',
+                        'rgba(236, 72, 153, 0.8)'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { color: '#fff' }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

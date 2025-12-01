@@ -1,4 +1,64 @@
+'use client';
+
+import { useState } from 'react';
+
 export default function HomePage() {
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        message: ''
+    });
+    const [formStatus, setFormStatus] = useState<{
+        type: 'success' | 'error' | null;
+        message: string;
+    }>({ type: null, message: '' });
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setFormData({
+            ...formData,
+            [e.target.id]: e.target.value
+        });
+    };
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        setFormStatus({ type: null, message: '' });
+
+        try {
+            const response = await fetch('/api/contact', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                setFormStatus({
+                    type: 'success',
+                    message: data.message || '¡Mensaje enviado correctamente! Te responderemos pronto.'
+                });
+                setFormData({ name: '', email: '', message: '' });
+            } else {
+                setFormStatus({
+                    type: 'error',
+                    message: data.error || 'Error al enviar el mensaje. Por favor, intenta nuevamente.'
+                });
+            }
+        } catch (error) {
+            setFormStatus({
+                type: 'error',
+                message: 'Error de conexión. Por favor, verifica tu conexión a internet.'
+            });
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
     return (
         <main className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
             {/* Hero Section */}
@@ -172,7 +232,16 @@ export default function HomePage() {
                         Contacto
                     </h2>
                     <div className="max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg">
-                        <form className="space-y-6">
+                        {formStatus.type && (
+                            <div className={`mb-6 p-4 rounded-lg ${
+                                formStatus.type === 'success' 
+                                    ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-100' 
+                                    : 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-100'
+                            }`}>
+                                {formStatus.message}
+                            </div>
+                        )}
+                        <form className="space-y-6" onSubmit={handleSubmit}>
                             <div>
                                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                     Nombre
@@ -180,6 +249,9 @@ export default function HomePage() {
                                 <input
                                     type="text"
                                     id="name"
+                                    value={formData.name}
+                                    onChange={handleChange}
+                                    required
                                     className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                                     placeholder="Tu nombre"
                                 />
@@ -191,6 +263,9 @@ export default function HomePage() {
                                 <input
                                     type="email"
                                     id="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    required
                                     className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                                     placeholder="tu@email.com"
                                 />
@@ -202,15 +277,19 @@ export default function HomePage() {
                                 <textarea
                                     id="message"
                                     rows={4}
+                                    value={formData.message}
+                                    onChange={handleChange}
+                                    required
                                     className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                                     placeholder="Cuéntame sobre tu proyecto..."
                                 ></textarea>
                             </div>
                             <button
                                 type="submit"
-                                className="w-full px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors shadow-lg"
+                                disabled={isSubmitting}
+                                className="w-full px-8 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-lg font-semibold transition-colors shadow-lg"
                             >
-                                Enviar Mensaje
+                                {isSubmitting ? 'Enviando...' : 'Enviar Mensaje'}
                             </button>
                         </form>
                     </div>
