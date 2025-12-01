@@ -8,6 +8,10 @@ node_modules/
 .vscode/
 .idea/
 
+# Sensitive files
+GITHUB_SETUP.md
+credentials.md
+
 # Build outputs
 dist/
 build/
