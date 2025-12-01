@@ -1,0 +1,24 @@
+# CCruces
+
+node_modules/
+.env
+.env.local
+*.log
+.DS_Store
+.vscode/
+.idea/
+
+# Build outputs
+dist/
+build/
+.next/
+out/
+
+# Database
+*.db
+*.sqlite
+postgres-data/
+metabase-data/
+
+# Docker
+.docker/
